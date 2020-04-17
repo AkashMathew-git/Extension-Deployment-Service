@@ -1,0 +1,92 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+}
+
+plugins {
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+ext {
+    def props = new Properties()
+    file("version.properties").withInputStream { props.load(it) }
+    major = props.getProperty("major")
+    minor = props.getProperty("minor")
+    patch = props.getProperty("patch")
+
+    build_version = System.getenv("BUILD_VERSION") ?: "${major}.${minor}.${patch}"
+}
+
+project.group = 'com.oracle.OSvC.thidwick.examples'
+applicationName = 'thidwick-starter'
+mainClassName = 'com.oracle.OSvC.thidwick.examples.starter.Application'
+
+applicationDefaultJvmArgs = [
+        '-Xms128m',
+        '-Xmx128m',
+        '-XX:+UseG1GC',
+        '-XX:MaxGCPauseMillis=250'
+]
+
+processResources {
+    with copySpec {
+        from 'src/main/resources'
+    }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+      url  'jcenter-cache/org/tomitribe/tomitribe-http-signatures/1.0/tomitribe-http-signatures-1.0.jar'
+    }
+    maven{
+        url 'fusion-apps-dev-local/FMWTOOLS_11/1/1/9/1_GENERIC_170102/1405_PATCHES4FA_11/1/13/0/0_PLATFORMS_JDK64/mw_home/oracle_common/modules/org.apache.http.components.httpcore-4.1.2/190110.2301.1-1/org.apache.http.components.httpcore-4.1.2-190110.2301.1-1.jar'
+    }
+    maven {
+        url 'http://artifactory-slc.oraclecorp.com/artifactory/OSCS_Oracledist/'
+    }
+    maven {
+        url "http://artifacthub.oraclecorp.com/osvc-thirdparty-release-local/"
+    }
+    maven {
+        url "http://artifacthub.oraclecorp.com/osvc-release-local/"
+    }
+    maven {
+        url "http://artifacthub.oraclecorp.com/libs-release"
+    }
+    maven {
+        url "http://artifacthub.oraclecorp.com/osvc-snapshot-local"
+    }
+}
+
+dependencyManagement {
+    dependencies {
+        dependencySet(group: 'com.oracle.OSvC.thidwick', version: '2.2.0.381') {
+            entry 'service-base'
+            entry 'kafka'
+        }
+    }
+}
+
+dependencies {
+    implementation group: 'org.w3c', name: 'dom', version: '2.3.0-jaxb-1.0.6'
+    implementation group: 'javax.xml.parsers', name: 'jaxp-api', version: '1.4.5'
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.1'
+    implementation "org.tomitribe:tomitribe-http-signatures:1.0"
+    implementation group: 'com.oracle.OSvC.thidwick', name: 'service-base'
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.mockito:mockito-core:2.7.5"
+    testImplementation "org.springframework:spring-test:4.2.5.RELEASE"
+}
+

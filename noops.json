@@ -1,0 +1,27 @@
+{
+  "dockerImage": "rncs-docker-local.docker.oraclecorp.com/osvc/thidwick-starter:latest",
+  "ports": {
+    "hw": "8080"
+  },
+  "environment" : {
+    "JAVA_OPTS": "-Xms${MEMORY}m -Xmx${MEMORY}m -Dconsul.base.address=http://${NOMAD_IP_hw}:8500"
+  },
+  "memory": "${MEMORY}",
+  "registrations": [
+    {
+      "name": "thidwick-starter",
+      "port": "hw",
+      "healthType": "http",
+      "healthPath": "/admin/ping",
+      "tags": ["path:/", "thidwick"]
+    }
+  ],
+  "variables": [
+    {
+      "name": "MEMORY",
+      "label": "Memory",
+      "description": "Amount of memory (MB) to allocate to the service",
+      "defaultValue": "256"
+    }
+  ]
+}
