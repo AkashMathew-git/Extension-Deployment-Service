@@ -1,0 +1,12 @@
+## Values file for installing grafana helm chart on Oracle Cloud Infrastructure (OCI)
+## Must use grafana v 1.6+ from https://github.com/kubernetes/charts/stable/grafana
+## Changes: enable persistence, set storageClassName=oci, size=50Gi to meet OCI minimum
+
+persistence:
+  enabled: true
+  storageClassName: oci
+  accessModes:
+    - ReadWriteOnce
+  size: 50Gi
+  annotations: {}
+  subPath: ""

@@ -1,0 +1,30 @@
+##  Values file for installing helm stable/prometheus chart for use on a laptop for Thidwick development.
+##  3/13/2018  bwiseman
+##  Changes:
+##     Disable alertmanager - not needed.
+##     Disable pushgateway  - definitely not needed.
+##     Prometheus pods installed:  server, kube-state-metrics, node-exporter per node in the cluster.
+##     Add default global scrape config. Set default scrape_interval: 20s, evaluation_interval: 20s.
+##     Set volume size to 1Gi (local use on laptop).  Original: 8Gi.  Required for OCI: 50Gi.
+##     To override persistentVolume.size, use this on helm install statement:  --set server.persistentVolume.size=50Gi
+
+server:
+  persistentVolume:
+    #size: 8Gi  # default
+    #size: 50Gi # OCI minimum volume size
+    size: 1Gi   # lightweight deployment for laptop
+
+alertmanager:
+  ## If false, alertmanager will not be installed
+  enabled: false
+
+pushgateway:
+  ## If false, pushgateway will not be installed
+  enabled: false
+
+## Prometheus server ConfigMap entries
+server:
+    # Override default scrape interval = 60 seconds, evaluation_interval = 60 seconds
+    global:
+      scrape_interval: 20s
+      evaluation_interval: 20s

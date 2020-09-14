@@ -1,0 +1,12 @@
+## Values file for installing grafana helm chart on local (laptop/desktop) docker/kubernetes
+## Must use grafana v 1.6+ from https://github.com/kubernetes/charts/stable/grafana
+## Changes: enable persistence, size=2Gi for lightweight install
+
+persistence:
+  enabled: true
+  #storageClassName: default
+  accessModes:
+    - ReadWriteOnce
+  size: 2Gi
+  annotations: {}
+  subPath: ""

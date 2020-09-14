@@ -1,0 +1,10 @@
+# Values-local file for galorndon/osvc-helm/incubator-thidwick
+application: thidwick-starter
+version: "0"
+# The Project Name should set the name of the microservice
+#
+# This helm values-local.yaml file is meant for use with the osvc-helm/incubator/thidwick helm chart.
+# It specifies the local docker build of thidwick-starter container
+#
+image:
+  imagename: localhost:5000/osvc/thidwick-starter:latest
